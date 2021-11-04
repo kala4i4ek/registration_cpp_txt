@@ -5,54 +5,42 @@
 
 using namespace std;
 
-void loginadmin() {
-	setlocale(LC_ALL, "RUS");
-	fstream db;
-	string alogin, apass, aline, avvod;
-	cout << "Введите ваш админ логин: ";
-	cin >> alogin;
-	cout << "Введите ваш админ пароль: ";
-	cin >> apass;
-	avvod = alogin + "=" + apass;
-	db.open("database_admins.txt", fstream::in | fstream::out | fstream::app);
-	while (getline(db, aline)) {
-		if (aline == avvod) {
-			break;
-		}
-	}
-	db.close();
-	if (aline == avvod) {
-		cout << "Вы авторизованы, как администратор!" << endl;
-	}
-	else {
-		cout << "Аккаунт не найден!" << endl;
-	}
-}
-
 void loginuser() {
 	setlocale(LC_ALL, "RUS");
 	fstream db;
-	string llogin, lpass, line, vvod;
+	string llogin, lpass, line, vvod, avvod;
 		cout << "Введите ваш логин: ";
 		cin >> llogin;
 		cout << "Введите ваш пароль: ";
 		cin >> lpass;
-		vvod = llogin + "=" + lpass;
+		vvod = "user:" + llogin + "=" + lpass;
+		avvod = "administrator:" + llogin + "=" + lpass;
+		cout << avvod;
 		if (llogin.length() <= 16 && lpass.length() <= 64) {
-			db.open("database_users.txt", fstream::in | fstream::out | fstream::app);
+			db.open("database.txt", fstream::in | fstream::out | fstream::app);
 			while (getline(db, line)) {
+				if (line == avvod) {
+					break;
+				}
 				if (line == vvod) {
 					break;
 				}
 			}
+			cout << line;
 			db.close();
-			if (line == vvod) {
+			if (line == avvod) {
 				system("cls");
-				cout << "Вы авторизованы, как пользователь!" << endl << endl;
+				cout << "Вы авторизованы, как администратор!\n\n";
 			}
 			else {
-				system("cls");
-				cout << "Аккаунт не найден!" << endl << endl;
+				if (line == vvod) {
+					system("cls");
+					cout << "Вы авторизованы, как пользователь!\n\n";
+				}
+				else {
+					system("cls");
+					cout << "Аккаунт не найден!\n\n";
+				}
 			}
 		}
 		else {
@@ -73,8 +61,8 @@ void registration() {
 		cout << "Введите ваш новый пароль: ";
 		cin >> rpass;
 		if (rlogin.length() <= 16 && rpass.length() <= 64) {
-			db.open("database_users.txt", fstream::in | fstream::out | fstream::app);
-			db << rlogin << "=" << rpass << "\n";
+			db.open("database.txt", fstream::in | fstream::out | fstream::app);
+			db << "user:" << rlogin << "=" << rpass << "\n";
 			SetConsoleCP(866);
 			db.close();
 			sch++;
@@ -90,26 +78,24 @@ int main() {
 	setlocale(LC_ALL, "RUS");
 	int vibor, sch1 = 0;
 	while (true) {
-		cout << "Выберите: \n1 - регистрация,\n2 - авторизация от имени пользователя,\n3 - авторизация от имени администратора.\n";
+		cout << "Выберите: \n1 - регистрация,\n2 - авторизация.\n";
 		cin >> vibor;
 		switch (vibor) {
 		case 1: {
 			registration();
 			break;
-		}
+			}
 		case 2: {
 			loginuser();
 			break;
-		}
-		case 3: {
-			loginadmin();
-		}
+			}
 		default: {
 			system("cls");
 			cout << "Вы неправильно ввели данные! Попробуйте ещё раз!\n";
 			break;
-		}
+			}
 		}
 	}
 	system("pause");
+	return 0;
 }
