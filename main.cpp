@@ -15,7 +15,6 @@ void loginuser() {
 		cin >> lpass;
 		vvod = "user:" + llogin + "=" + lpass;
 		avvod = "administrator:" + llogin + "=" + lpass;
-		cout << avvod;
 		if (llogin.length() <= 16 && lpass.length() <= 64) {
 			db.open("database.txt", fstream::in | fstream::out | fstream::app);
 			while (getline(db, line)) {
@@ -26,7 +25,6 @@ void loginuser() {
 					break;
 				}
 			}
-			cout << line;
 			db.close();
 			if (line == avvod) {
 				system("cls");
